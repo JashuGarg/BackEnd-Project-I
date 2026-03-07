@@ -1,6 +1,5 @@
-import express from "express"
-
-
+import express from "express";
+import userRouter from "./routes/user.routes.js";
 
 const port = 8000;
 const url = "";
@@ -9,9 +8,10 @@ const app = express();
 //middlewares
 
 app.use(express.urlencoded({extended:false})); // parse form data 
-app.use(express.json) // use to handle client json Data while http requestsss
+app.use(express.json()); // use to handle client json Data while http requests
 
 // routes
+app.use("/", userRouter);
 
 // DB connecting
 
