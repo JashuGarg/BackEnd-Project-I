@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScholarVault — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #6c63ff; --purple-bg: #f0eeff;
+      --dark: #1a1a2e; --bg: #f7f5ff;
+      --border: #e8e4f0; --muted: #aaa;
+      --green: #11998e; --red: #ff6b6b; --gold: #f7971e;
+    }
+    body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100vh; display: flex; }
+
+    .sidebar {
+      width: 250px; background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      display: flex; flex-direction: column; padding: 28px 18px;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding: 0 6px; }
+    .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #6c63ff, #a78bfa); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .logo-text { font-size: 20px; font-weight: 900; font-family: 'Playfair Display', serif; color: white; }
+    .nav-label { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 0 8px; margin-bottom: 6px; margin-top: 20px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; text-decoration: none; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.07); }
+    .nav-item.active { background: rgba(108,99,255,0.25); border: 1px solid rgba(108,99,255,0.4); }
+    .nav-icon { font-size: 18px; width: 22px; text-align: center; }
+    .nav-text { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.7); }
+    .nav-item.active .nav-text { color: white; }
+    .nav-badge { margin-left: auto; background: var(--purple); color: white; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
+    .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .user-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); }
+    .user-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #6c63ff, #a78bfa); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: white; flex-shrink: 0; }
+    .user-name { font-size: 13px; font-weight: 800; color: white; }
+    .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+    .user-logout { margin-left: auto; font-size: 16px; cursor: pointer; opacity: 0.5; transition: opacity 0.2s; }
+    .user-logout:hover { opacity: 1; }
+
+    .main { margin-left: 250px; flex: 1; display: flex; flex-direction: column; }
+
+    .topbar { background: white; border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 50; }
+    .page-title { font-size: 20px; font-weight: 900; font-family: 'Playfair Display', serif; color: var(--dark); }
+    .topbar-search { flex: 1; max-width: 480px; margin-left: 24px; position: relative; }
+    .topbar-search input { width: 100%; padding: 10px 16px 10px 40px; background: var(--bg); border: 2px solid var(--border); border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600; color: var(--dark); outline: none; transition: all 0.2s; }
+    .topbar-search input:focus { border-color: var(--purple); background: white; box-shadow: 0 0 0 4px rgba(108,99,255,0.1); }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; }
+
+    .filter-wrap { position: relative; }
+    .filter-btn { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border: 2px solid var(--border); border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; color: var(--dark); cursor: pointer; transition: all 0.2s; }
+    .filter-btn:hover, .filter-btn.open { border-color: var(--purple); color: var(--purple); background: var(--purple-bg); }
+    .filter-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: white; border: 2px solid var(--border); border-radius: 14px; padding: 8px; min-width: 170px; box-shadow: 0 16px 40px rgba(0,0,0,0.1); display: none; z-index: 200; }
+    .filter-dropdown.show { display: block; animation: fadeDown 0.2s ease; }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:translateY(0) } }
+    .filter-option { padding: 9px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; color: #555; transition: all 0.15s; }
+    .filter-option:hover, .filter-option.selected { background: var(--purple-bg); color: var(--purple); }
+
+    .content { padding: 32px; flex: 1; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: white; border-radius: 18px; padding: 22px; border: 2px solid var(--border); transition: all 0.2s; }
+    .stat-card:hover { border-color: var(--purple); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(108,99,255,0.1); }
+    .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .stat-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .stat-icon.p { background: rgba(108,99,255,0.1); }
+    .stat-icon.g { background: rgba(17,153,142,0.1); }
+    .stat-icon.o { background: rgba(247,151,30,0.1); }
+    .stat-num { font-size: 30px; font-weight: 900; color: var(--dark); margin-bottom: 4px; }
+    .stat-label { font-size: 12px; color: var(--muted); font-weight: 700; }
+
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .section-title { font-size: 18px; font-weight: 900; font-family: 'Playfair Display', serif; color: var(--dark); }
+
+    .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .book-card { background: white; border-radius: 16px; border: 2px solid var(--border); overflow: hidden; transition: all 0.22s; }
+    .book-card:hover { border-color: var(--purple); transform: translateY(-3px); box-shadow: 0 10px 28px rgba(108,99,255,0.15); }
+    .book-cover { height: 130px; display: flex; align-items: center; justify-content: center; position: relative; }
+    .book-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 8px; }
+    .book-badge.available { background: rgba(17,153,142,0.15); color: var(--green); }
+    .book-badge.borrowed { background: rgba(255,107,107,0.15); color: var(--red); }
+    .book-info { padding: 12px; }
+    .book-title { font-size: 13px; font-weight: 800; color: var(--dark); margin-bottom: 3px; line-height: 1.3; }
+    .book-author { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+    .book-action { width: 100%; padding: 7px; border-radius: 8px; border: none; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+    .book-action.borrow { background: linear-gradient(135deg, #6c63ff, #a78bfa); color: white; }
+    .book-action.borrow:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(108,99,255,0.35); }
+    .book-action.return { background: rgba(255,107,107,0.1); color: var(--red); border: 1px solid rgba(255,107,107,0.2); }
+    .book-action.return:hover { background: rgba(255,107,107,0.2); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+
+    .panel { background: white; border-radius: 18px; border: 2px solid var(--border); padding: 20px; }
+    .borrow-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .borrow-item:last-child { border-bottom: none; }
+    .borrow-emoji { font-size: 22px; width: 38px; height: 38px; background: var(--bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .borrow-info { flex: 1; min-width: 0; }
+    .borrow-title { font-size: 13px; font-weight: 800; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .borrow-due { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .borrow-days { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 8px; white-space: nowrap; background: rgba(17,153,142,0.1); color: var(--green); }
+
+    .search-results { display: none; background: white; border: 2px solid var(--border); border-radius: 14px; padding: 8px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .search-results.show { display: block; }
+    .search-result-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: all 0.15s; }
+    .search-result-item:hover { background: var(--bg); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(26,26,46,0.5); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(4px); }
+    .modal-overlay.show { display: flex; }
+    .modal { background: white; border-radius: 24px; padding: 32px; max-width: 400px; width: 90%; animation: popUp 0.3s ease; }
+    @keyframes popUp { from { transform:scale(0.9); opacity:0 } to { transform:scale(1); opacity:1 } }
+    .modal-title { font-size: 22px; font-weight: 900; font-family: 'Playfair Display', serif; color: var(--dark); margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+    .modal-book { background: var(--bg); border-radius: 14px; padding: 14px; display: flex; gap: 14px; align-items: center; margin-bottom: 20px; }
+    .modal-info { font-size: 12px; color: #555; line-height: 1.7; margin-bottom: 20px; background: var(--purple-bg); border: 1px solid #d4d0ff; border-radius: 10px; padding: 12px; }
+    .modal-btns { display: flex; gap: 10px; }
+    .modal-cancel { flex: 1; padding: 12px; border-radius: 12px; background: var(--bg); border: 2px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; color: #888; }
+    .modal-confirm { flex: 1; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, #6c63ff, #a78bfa); color: white; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; }
+
+    .toast { position: fixed; bottom: 28px; right: 28px; background: var(--dark); color: white; padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; display: none; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 999; }
+    .toast.show { display: flex; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
+
+    @media (max-width: 900px) {
+      .sidebar { width: 68px; padding: 20px 10px; }
+      .logo-text, .nav-text, .nav-badge, .nav-label, .user-name, .user-role, .user-logout { display: none; }
+      .main { margin-left: 68px; }
+      .two-col { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">📚</div>
+    <span class="logo-text">ScholarVault</span>
+  </div>
+  <div class="nav-label">Menu</div>
+  <a href="dashboard.html" class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
+  <a href="#" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">My Borrows</span><span class="nav-badge" id="navBadge">0</span></a>
+  <div class="nav-label">Links</div>
+  <a href="admin.html" class="nav-item"><span class="nav-icon">🛡️</span><span class="nav-text">Admin Panel</span></a>
+  <a href="login.html" class="nav-item"><span class="nav-icon">🚪</span><span class="nav-text">Logout</span></a>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">A</div>
+      <div>
+        <div class="user-name">Arjun Sharma</div>
+        <div class="user-role">Student · CS</div>
+      </div>
+      <span class="user-logout" onclick="window.location.href='login.html'">🚪</span>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="page-title">Dashboard</div>
+    <div class="topbar-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search books, authors…" oninput="onSearch(this.value)" />
+    </div>
+    <div class="filter-wrap">
+      <button class="filter-btn" onclick="toggleFilter()" id="filterBtn">
+        <span>📂</span> <span id="filterLabel">All Books</span> <span>▾</span>
+      </button>
+      <div class="filter-dropdown" id="filterDropdown">
+        <div class="filter-option selected" onclick="setFilter('All Books',this,'all')">📚 All Books</div>
+        <div class="filter-option" onclick="setFilter('Borrowed',this,'borrowed')">📦 Borrowed</div>
+        <div class="filter-option" onclick="setFilter('Available',this,'available')">✅ Available</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="search-results" id="searchResults"></div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon p">📚</div></div>
+        <div class="stat-num" id="statBorrowed">0</div>
+        <div class="stat-label">Books Currently Borrowed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon g">✅</div></div>
+        <div class="stat-num">27</div>
+        <div class="stat-label">Total Books Returned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon o">📖</div></div>
+        <div class="stat-num">50,000+</div>
+        <div class="stat-label">Books in Library</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-header">
+          <div class="section-title">📖 Books</div>
+        </div>
+        <div class="books-grid" id="booksGrid"></div>
+      </div>
+      <div>
+        <div class="section-header">
+          <div class="section-title">📦 My Borrows</div>
+          <span style="font-size:12px;font-weight:800;background:var(--purple-bg);color:var(--purple);padding:3px 10px;border-radius:8px" id="borrowLabel">0/5</span>
+        </div>
+        <div class="panel" id="myBorrowsPanel">
+          <div style="text-align:center;padding:28px 0;color:var(--muted);font-size:13px">No books borrowed yet</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BORROW MODAL -->
+<div class="modal-overlay" id="borrowModal">
+  <div class="modal">
+    <div class="modal-title">Borrow Book</div>
+    <div class="modal-sub">Confirm your borrowing request</div>
+    <div class="modal-book">
+      <span style="font-size:36px" id="modalEmoji"></span>
+      <div>
+        <div style="font-size:15px;font-weight:800;color:var(--dark)" id="modalBookTitle"></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="modalBookMeta"></div>
+      </div>
+    </div>
+    <div class="modal-info">📅 Due date: <strong id="modalDue"></strong> (14 days)<br/>Slots remaining after this: <strong id="modalSlots"></strong></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeBorrowModal()">Cancel</button>
+      <button class="modal-confirm" onclick="confirmBorrow()">✅ Confirm Borrow</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+const MAX_SLOTS = 5;
+let borrowedIds = [];
+let pendingBorrow = null;
+
+const books = [
+  { id:1, emoji:'🧮', title:'Intro to Algorithms', author:'Cormen et al.', genre:'CS' },
+  { id:2, emoji:'📗', title:'Clean Code', author:'Robert C. Martin', genre:'CS' },
+  { id:3, emoji:'🌍', title:'Sapiens', author:'Yuval Noah Harari', genre:'History' },
+  { id:4, emoji:'🚀', title:'The Lean Startup', author:'Eric Ries', genre:'Business' },
+  { id:5, emoji:'🐍', title:'Python Crash Course', author:'Eric Matthes', genre:'CS' },
+  { id:6, emoji:'🧠', title:'Thinking, Fast & Slow', author:'Daniel Kahneman', genre:'Psychology' },
+  { id:7, emoji:'📐', title:'Linear Algebra Done Right', author:'Sheldon Axler', genre:'Math' },
+  { id:8, emoji:'🌱', title:'Atomic Habits', author:'James Clear', genre:'Self-Help' },
+];
+const colors = { CS:'#f0eeff', History:'#fff8ee', Business:'#e8f8ff', Psychology:'#fff0f8', Math:'#f0fff8', 'Self-Help':'#f5fff0' };
+
+function renderBooks(list) {
+  const grid = document.getElementById('booksGrid');
+  grid.innerHTML = '';
+  list.forEach(b => {
+    const isBorrowed = borrowedIds.includes(b.id);
+    const card = document.createElement('div');
+    card.className = 'book-card';
+    card.innerHTML = `
+      <div class="book-cover" style="background:${colors[b.genre]||'#f7f5ff'}">
+        <span style="font-size:50px">${b.emoji}</span>
+        <span class="book-badge ${isBorrowed?'borrowed':'available'}">${isBorrowed?'Borrowed':'Available'}</span>
+      </div>
+      <div class="book-info">
+        <div class="book-title">${b.title}</div>
+        <div class="book-author">${b.author}</div>
+        <button class="book-action ${isBorrowed?'return':'borrow'}" onclick="handleAction(${b.id})">
+          ${isBorrowed?'↩ Return':'+ Borrow'}
+        </button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function renderBorrows() {
+  const panel = document.getElementById('myBorrowsPanel');
+  const borrowed = books.filter(b => borrowedIds.includes(b.id));
+  if (!borrowed.length) {
+    panel.innerHTML = '<div style="text-align:center;padding:28px 0;color:var(--muted);font-size:13px">No books borrowed yet</div>';
+  } else {
+    panel.innerHTML = borrowed.map(b => {
+      const due = new Date(); due.setDate(due.getDate() + 14);
+      return `<div class="borrow-item">
+        <div class="borrow-emoji">${b.emoji}</div>
+        <div class="borrow-info">
+          <div class="borrow-title">${b.title}</div>
+          <div class="borrow-due">Due ${due.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+        </div>
+        <span class="borrow-days">14d left</span>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('borrowLabel').textContent = `${borrowedIds.length}/${MAX_SLOTS}`;
+  document.getElementById('navBadge').textContent = borrowedIds.length;
+  document.getElementById('statBorrowed').textContent = borrowedIds.length;
+}
+
+function handleAction(id) {
+  const book = books.find(b => b.id === id);
+  if (borrowedIds.includes(id)) {
+    borrowedIds = borrowedIds.filter(x => x !== id);
+    renderBooks(books);
+    renderBorrows();
+    showToast('✅ "' + book.title + '" returned successfully!');
+  } else {
+    if (borrowedIds.length >= MAX_SLOTS) { showToast('⚠️ You have reached the 5-book limit!'); return; }
+    pendingBorrow = book;
+    const due = new Date(); due.setDate(due.getDate() + 14);
+    document.getElementById('modalEmoji').textContent = book.emoji;
+    document.getElementById('modalBookTitle').textContent = book.title;
+    document.getElementById('modalBookMeta').textContent = book.author + ' · ' + book.genre;
+    document.getElementById('modalDue').textContent = due.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+    document.getElementById('modalSlots').textContent = MAX_SLOTS - borrowedIds.length - 1;
+    document.getElementById('borrowModal').classList.add('show');
+  }
+}
+
+function confirmBorrow() {
+  if (!pendingBorrow) return;
+  borrowedIds.push(pendingBorrow.id);
+  closeBorrowModal();
+  renderBooks(books);
+  renderBorrows();
+  showToast('📚 "' + pendingBorrow.title + '" borrowed! Due in 14 days.');
+  pendingBorrow = null;
+}
+
+function closeBorrowModal() { document.getElementById('borrowModal').classList.remove('show'); }
+
+function onSearch(val) {
+  const sr = document.getElementById('searchResults');
+  if (!val.trim()) { sr.classList.remove('show'); return; }
+  const results = books.filter(b => b.title.toLowerCase().includes(val.toLowerCase()) || b.author.toLowerCase().includes(val.toLowerCase()));
+  if (!results.length) { sr.innerHTML = '<div style="padding:14px;font-size:13px;color:var(--muted);text-align:center">No books found</div>'; sr.classList.add('show'); return; }
+  sr.innerHTML = results.map(b => `
+    <div class="search-result-item" onclick="handleAction(${b.id}); document.getElementById('searchInput').value=''; document.getElementById('searchResults').classList.remove('show')">
+      <span style="font-size:22px">${b.emoji}</span>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--dark)">${b.title}</div>
+        <div style="font-size:11px;color:var(--muted)">${b.author}</div>
+      </div>
+      <span class="book-badge ${borrowedIds.includes(b.id)?'borrowed':'available'}" style="position:static;margin-left:auto">${borrowedIds.includes(b.id)?'Borrowed':'Available'}</span>
+    </div>`).join('');
+  sr.classList.add('show');
+}
+
+function toggleFilter() {
+  document.getElementById('filterDropdown').classList.toggle('show');
+  document.getElementById('filterBtn').classList.toggle('open');
+}
+
+function setFilter(name, el, type) {
+  document.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('filterLabel').textContent = name;
+  document.getElementById('filterDropdown').classList.remove('show');
+  document.getElementById('filterBtn').classList.remove('open');
+  if (type === 'borrowed') renderBooks(books.filter(b => borrowedIds.includes(b.id)));
+  else if (type === 'available') renderBooks(books.filter(b => !borrowedIds.includes(b.id)));
+  else renderBooks(books);
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.filter-wrap')) { document.getElementById('filterDropdown').classList.remove('show'); document.getElementById('filterBtn').classList.remove('open'); }
+  if (!e.target.closest('.topbar-search')) document.getElementById('searchResults').classList.remove('show');
+});
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+renderBooks(books);
+renderBorrows();
+</script>
+</body>
+</html>

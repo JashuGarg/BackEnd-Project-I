@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScholarVault — Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #6c63ff; --purple-bg: #f0eeff;
+      --dark: #1a1a2e; --bg: #f7f5ff;
+      --border: #e8e4f0; --muted: #aaa;
+      --green: #11998e; --red: #ff6b6b; --gold: #f7971e;
+    }
+    body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100vh; display: flex; }
+
+    .sidebar {
+      width: 240px; background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      display: flex; flex-direction: column; padding: 24px 16px;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 0 6px; }
+    .logo-icon { width: 38px; height: 38px; background: linear-gradient(135deg, #6c63ff, #a78bfa); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .logo-text { font-size: 18px; font-weight: 900; font-family: 'Playfair Display', serif; color: white; }
+    .admin-badge { display: inline-block; background: rgba(255,107,107,0.2); border: 1px solid rgba(255,107,107,0.4); border-radius: 6px; padding: 2px 8px; font-size: 9px; font-weight: 800; color: #ff9999; letter-spacing: 1px; margin: 0 0 28px 6px; }
+    .nav-label { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 6px; margin-top: 18px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 10px; border-radius: 10px; cursor: pointer; transition: all 0.2s; text-decoration: none; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.07); }
+    .nav-item.active { background: rgba(108,99,255,0.25); border: 1px solid rgba(108,99,255,0.4); }
+    .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .nav-text { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.7); }
+    .nav-item.active .nav-text { color: white; }
+    .sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .admin-user { display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+    .admin-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #ff6b6b, #ff9999); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: white; flex-shrink: 0; }
+
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+
+    .topbar { background: white; border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+    .page-title { font-size: 18px; font-weight: 900; font-family: 'Playfair Display', serif; color: var(--dark); }
+    .topbar-search { flex: 1; max-width: 340px; margin-left: 20px; position: relative; }
+    .topbar-search input { width: 100%; padding: 9px 14px 9px 36px; background: var(--bg); border: 2px solid var(--border); border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 600; color: var(--dark); outline: none; transition: all 0.2s; }
+    .topbar-search input:focus { border-color: var(--purple); }
+    .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 14px; }
+    .topbar-btns { margin-left: auto; display: flex; gap: 8px; }
+    .btn-add { display: flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 10px; border: none; background: linear-gradient(135deg, #6c63ff, #a78bfa); color: white; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+    .btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(108,99,255,0.35); }
+    .btn-add.green { background: linear-gradient(135deg, #11998e, #38ef7d); color: #003d35; }
+    .btn-add.green:hover { box-shadow: 0 6px 16px rgba(17,153,142,0.35); }
+
+    .content { padding: 24px 28px; flex: 1; }
+
+    /* KPI */
+    .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+    .kpi-card { background: white; border-radius: 16px; padding: 18px; border: 2px solid var(--border); transition: all 0.2s; }
+    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(108,99,255,0.1); border-color: var(--purple); }
+    .kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .kpi-icon.p { background: rgba(108,99,255,0.1); }
+    .kpi-icon.g { background: rgba(17,153,142,0.1); }
+    .kpi-icon.o { background: rgba(247,151,30,0.1); }
+    .kpi-num { font-size: 26px; font-weight: 900; color: var(--dark); }
+    .kpi-label { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; background: var(--bg); border-radius: 12px; padding: 4px; margin-bottom: 20px; width: fit-content; border: 2px solid var(--border); }
+    .tab { padding: 8px 20px; border-radius: 9px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.2s; color: var(--muted); border: none; background: transparent; font-family: 'Nunito', sans-serif; }
+    .tab.active { background: white; color: var(--purple); box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+
+    /* Table */
+    .table-wrap { background: white; border-radius: 16px; border: 2px solid var(--border); overflow: hidden; }
+    .table-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .table-title { font-size: 15px; font-weight: 900; color: var(--dark); }
+    table { width: 100%; border-collapse: collapse; }
+    th { padding: 10px 20px; text-align: left; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 1px solid var(--border); }
+    td { padding: 13px 20px; font-size: 13px; font-weight: 700; color: var(--dark); border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafe; }
+    .pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; }
+    .pill.available { background: rgba(17,153,142,0.1); color: var(--green); }
+    .pill.issued { background: rgba(108,99,255,0.1); color: var(--purple); }
+    .pill.active { background: rgba(17,153,142,0.1); color: var(--green); }
+    .pill.suspended { background: rgba(255,107,107,0.1); color: var(--red); }
+    .row-actions { display: flex; gap: 6px; }
+    .row-btn { padding: 4px 10px; border-radius: 7px; border: 1px solid var(--border); background: white; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.15s; color: #666; font-family: 'Nunito', sans-serif; }
+    .row-btn:hover { border-color: var(--purple); color: var(--purple); }
+    .row-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+    /* Tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(26,26,46,0.5); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(4px); }
+    .modal-overlay.show { display: flex; }
+    .modal { background: white; border-radius: 22px; padding: 28px; max-width: 440px; width: 90%; animation: popUp 0.3s ease; }
+    @keyframes popUp { from { transform:scale(0.9); opacity:0 } to { transform:scale(1); opacity:1 } }
+    .modal-title { font-size: 20px; font-weight: 900; font-family: 'Playfair Display', serif; color: var(--dark); margin-bottom: 18px; }
+    .form-field { margin-bottom: 13px; }
+    .form-field label { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+    .form-field input, .form-field select { width: 100%; padding: 10px 13px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: var(--dark); outline: none; transition: all 0.2s; }
+    .form-field input:focus, .form-field select:focus { border-color: var(--purple); box-shadow: 0 0 0 4px rgba(108,99,255,0.1); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+    .modal-cancel { flex:1; padding:11px; border-radius:11px; background:var(--bg); border:2px solid var(--border); font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; color:#888; }
+    .modal-confirm { flex:1; padding:11px; border-radius:11px; border:none; background:linear-gradient(135deg,#6c63ff,#a78bfa); color:white; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--dark); color: white; padding: 12px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; display: none; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 999; }
+    .toast.show { display: flex; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">📚</div>
+    <span class="logo-text">ScholarVault</span>
+  </div>
+  <span class="admin-badge">ADMIN PANEL</span>
+
+  <div class="nav-label">Manage</div>
+  <a href="#" class="nav-item active" onclick="switchTab('books',this)"><span class="nav-icon">📚</span><span class="nav-text">Books</span></a>
+  <a href="#" class="nav-item" onclick="switchTab('members',this)"><span class="nav-icon">👥</span><span class="nav-text">Members</span></a>
+  <a href="#" class="nav-item" onclick="switchTab('issued',this)"><span class="nav-icon">📦</span><span class="nav-text">Issued Books</span></a>
+
+  <div class="nav-label">Links</div>
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">User Dashboard</span></a>
+  <a href="login.html" class="nav-item"><span class="nav-icon">🚪</span><span class="nav-text">Logout</span></a>
+
+  <div class="sidebar-footer">
+    <div class="admin-user">
+      <div class="admin-avatar">L</div>
+      <div>
+        <div style="font-size:12px;font-weight:800;color:white">Librarian</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.4)">Admin Access</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="adminPageTitle">Books</div>
+    <div class="topbar-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="adminSearch" placeholder="Search…" oninput="doSearch(this.value)" />
+    </div>
+    <div class="topbar-btns">
+      <button class="btn-add" onclick="openModal('addBookModal')">➕ Add Book</button>
+      <button class="btn-add green" onclick="openModal('addMemberModal')">👤 Add Member</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPI -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-top"><div class="kpi-icon p">📚</div></div>
+        <div class="kpi-num" id="kpiBooks">8</div>
+        <div class="kpi-label">Total Books</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top"><div class="kpi-icon g">👥</div></div>
+        <div class="kpi-num" id="kpiMembers">6</div>
+        <div class="kpi-label">Members</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top"><div class="kpi-icon o">📦</div></div>
+        <div class="kpi-num" id="kpiIssued">4</div>
+        <div class="kpi-label">Books Issued</div>
+      </div>
+    </div>
+
+    <!-- BOOKS TAB -->
+    <div class="tab-panel active" id="tab-books">
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">📚 Book Inventory</div>
+          <div style="display:flex;gap:6px">
+            <button class="row-btn" onclick="filterBookStatus('all')">All</button>
+            <button class="row-btn" onclick="filterBookStatus('available')">Available</button>
+            <button class="row-btn" onclick="filterBookStatus('issued')">Issued</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th></th><th>Title</th><th>Author</th><th>Genre</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="booksBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MEMBERS TAB -->
+    <div class="tab-panel" id="tab-members">
+      <div class="table-wrap">
+        <div class="table-header"><div class="table-title">👥 Members</div></div>
+        <table>
+          <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Books Out</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="membersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ISSUED TAB -->
+    <div class="tab-panel" id="tab-issued">
+      <div class="table-wrap">
+        <div class="table-header"><div class="table-title">📦 Issued Books</div></div>
+        <table>
+          <thead><tr><th>Book</th><th>Member</th><th>Issue Date</th><th>Due Date</th><th>Actions</th></tr></thead>
+          <tbody id="issuedBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ADD BOOK MODAL -->
+<div class="modal-overlay" id="addBookModal">
+  <div class="modal">
+    <div class="modal-title">➕ Add New Book</div>
+    <div class="form-row">
+      <div class="form-field"><label>Title</label><input type="text" id="newBookTitle" placeholder="e.g. Clean Code" /></div>
+      <div class="form-field"><label>Author</label><input type="text" id="newBookAuthor" placeholder="e.g. Robert Martin" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Genre</label>
+        <select id="newBookGenre">
+          <option>CS</option><option>Math</option><option>Physics</option><option>Chemistry</option>
+          <option>Biology</option><option>History</option><option>Business</option><option>Self-Help</option>
+        </select>
+      </div>
+      <div class="form-field"><label>ISBN</label><input type="text" id="newBookISBN" placeholder="978-..." /></div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('addBookModal')">Cancel</button>
+      <button class="modal-confirm" onclick="saveBook()">✅ Add Book</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MEMBER MODAL -->
+<div class="modal-overlay" id="addMemberModal">
+  <div class="modal">
+    <div class="modal-title">👤 Add New Member</div>
+    <div class="form-row">
+      <div class="form-field"><label>First Name</label><input type="text" id="newFirst" placeholder="First" /></div>
+      <div class="form-field"><label>Last Name</label><input type="text" id="newLast" placeholder="Last" /></div>
+    </div>
+    <div class="form-field"><label>Email</label><input type="email" id="newEmail" placeholder="student@university.edu" /></div>
+    <div class="form-row">
+      <div class="form-field"><label>Role</label>
+        <select id="newRole"><option>Student</option><option>Faculty</option><option>Staff</option></select>
+      </div>
+      <div class="form-field"><label>Department</label>
+        <select id="newDept"><option>Computer Science</option><option>Mathematics</option><option>Physics</option><option>Chemistry</option><option>Biology</option><option>Economics</option></select>
+      </div>
+    </div>
+    <div class="form-field"><label>Student / Staff ID</label><input type="text" id="newMemberId" placeholder="e.g. CS2025001" /></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('addMemberModal')">Cancel</button>
+      <button class="modal-confirm" onclick="saveMember()">✅ Add Member</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+let books = [
+  { id:1, emoji:'🧮', title:'Intro to Algorithms', author:'Cormen et al.', genre:'CS', status:'issued' },
+  { id:2, emoji:'📗', title:'Clean Code', author:'Robert C. Martin', genre:'CS', status:'issued' },
+  { id:3, emoji:'🌍', title:'Sapiens', author:'Yuval Noah Harari', genre:'History', status:'available' },
+  { id:4, emoji:'🚀', title:'The Lean Startup', author:'Eric Ries', genre:'Business', status:'issued' },
+  { id:5, emoji:'🐍', title:'Python Crash Course', author:'Eric Matthes', genre:'CS', status:'available' },
+  { id:6, emoji:'🧠', title:'Thinking, Fast & Slow', author:'Daniel Kahneman', genre:'Psychology', status:'issued' },
+  { id:7, emoji:'📐', title:'Linear Algebra Done Right', author:'Sheldon Axler', genre:'Math', status:'available' },
+  { id:8, emoji:'🌱', title:'Atomic Habits', author:'James Clear', genre:'Self-Help', status:'available' },
+];
+
+let members = [
+  { id:1, name:'Arjun Sharma', role:'Student', dept:'Computer Science', booksOut:3, status:'active' },
+  { id:2, name:'Priya Singh', role:'Student', dept:'Biology', booksOut:2, status:'active' },
+  { id:3, name:'Rahul Kumar', role:'Faculty', dept:'Mathematics', booksOut:1, status:'active' },
+  { id:4, name:'Sneha Patel', role:'Student', dept:'Economics', booksOut:0, status:'active' },
+  { id:5, name:'Dr. Mehra', role:'Faculty', dept:'Physics', booksOut:2, status:'active' },
+  { id:6, name:'Vikram Das', role:'Staff', dept:'Library', booksOut:0, status:'suspended' },
+];
+
+let issued = [
+  { id:1, book:'Intro to Algorithms', emoji:'🧮', member:'Arjun Sharma', issueDate:'2026-02-17', dueDate:'2026-03-03' },
+  { id:2, book:'Clean Code', emoji:'📗', member:'Arjun Sharma', issueDate:'2026-02-17', dueDate:'2026-03-17' },
+  { id:3, book:'The Lean Startup', emoji:'🚀', member:'Arjun Sharma', issueDate:'2026-02-24', dueDate:'2026-03-10' },
+  { id:4, book:'Thinking, Fast & Slow', emoji:'🧠', member:'Priya Singh', issueDate:'2026-02-20', dueDate:'2026-03-06' },
+];
+
+function updateKPIs() {
+  document.getElementById('kpiBooks').textContent = books.length;
+  document.getElementById('kpiMembers').textContent = members.length;
+  document.getElementById('kpiIssued').textContent = issued.length;
+}
+
+function renderBooks(list) {
+  document.getElementById('booksBody').innerHTML = list.map(b => `
+    <tr>
+      <td style="font-size:20px">${b.emoji}</td>
+      <td>${b.title}</td>
+      <td style="color:var(--muted)">${b.author}</td>
+      <td><span style="background:var(--bg);padding:3px 8px;border-radius:7px;font-size:11px;font-weight:800">${b.genre}</span></td>
+      <td><span class="pill ${b.status}">${b.status}</span></td>
+      <td><div class="row-actions">
+        <button class="row-btn danger" onclick="deleteBook(${b.id})">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function filterBookStatus(status) {
+  const list = status === 'all' ? books : books.filter(b => b.status === status);
+  renderBooks(list);
+}
+
+function deleteBook(id) {
+  books = books.filter(b => b.id !== id);
+  renderBooks(books);
+  updateKPIs();
+  showToast('🗑️ Book removed!');
+}
+
+function renderMembers(list) {
+  document.getElementById('membersBody').innerHTML = list.map(m => `
+    <tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6c63ff,#a78bfa);display:flex;align-items:center;justify-content:center;font-weight:900;color:white;font-size:13px">${m.name[0]}</div>
+        ${m.name}
+      </div></td>
+      <td>${m.role}</td>
+      <td style="color:var(--muted)">${m.dept}</td>
+      <td style="font-weight:900;color:${m.booksOut>0?'var(--purple)':'var(--muted)'}">${m.booksOut}</td>
+      <td><span class="pill ${m.status}">${m.status}</span></td>
+      <td><div class="row-actions">
+        <button class="row-btn danger" onclick="toggleSuspend(${m.id})">${m.status==='suspended'?'Unsuspend':'Suspend'}</button>
+        <button class="row-btn danger" onclick="deleteMember(${m.id})">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function toggleSuspend(id) {
+  const m = members.find(x => x.id === id);
+  m.status = m.status === 'suspended' ? 'active' : 'suspended';
+  renderMembers(members);
+  showToast(`👤 ${m.name} ${m.status === 'suspended' ? 'suspended' : 'reactivated'}!`);
+}
+
+function deleteMember(id) {
+  const m = members.find(x => x.id === id);
+  members = members.filter(x => x.id !== id);
+  renderMembers(members);
+  updateKPIs();
+  showToast('🗑️ Member ' + m.name + ' removed!');
+}
+
+function renderIssued() {
+  document.getElementById('issuedBody').innerHTML = issued.map(i => `
+    <tr>
+      <td>${i.emoji} ${i.book}</td>
+      <td>${i.member}</td>
+      <td>${i.issueDate}</td>
+      <td>${i.dueDate}</td>
+      <td><button class="row-btn" onclick="markReturn(${i.id})">✅ Return</button></td>
+    </tr>`).join('');
+}
+
+function markReturn(id) {
+  const item = issued.find(i => i.id === id);
+  // mark book as available
+  const book = books.find(b => b.title === item.book);
+  if (book) book.status = 'available';
+  issued = issued.filter(i => i.id !== id);
+  renderIssued();
+  renderBooks(books);
+  updateKPIs();
+  showToast('✅ "' + item.book + '" marked as returned!');
+}
+
+function doSearch(val) {
+  if (!val.trim()) { renderBooks(books); renderMembers(members); return; }
+  const v = val.toLowerCase();
+  renderBooks(books.filter(b => b.title.toLowerCase().includes(v) || b.author.toLowerCase().includes(v)));
+  renderMembers(members.filter(m => m.name.toLowerCase().includes(v)));
+}
+
+// Tab switching
+function switchTab(name, el) {
+  event.preventDefault();
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  const titles = { books:'Books', members:'Members', issued:'Issued Books' };
+  document.getElementById('adminPageTitle').textContent = titles[name];
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+function saveBook() {
+  const title = document.getElementById('newBookTitle').value.trim();
+  const author = document.getElementById('newBookAuthor').value.trim();
+  const genre = document.getElementById('newBookGenre').value;
+  if (!title || !author) { showToast('⚠️ Please fill in Title and Author!'); return; }
+  const emojis = { CS:'💻', Math:'📐', Physics:'⚛️', Chemistry:'⚗️', Biology:'🔬', History:'📜', Business:'📈', 'Self-Help':'🌱' };
+  books.push({ id: Date.now(), emoji: emojis[genre]||'📗', title, author, genre, status:'available' });
+  closeModal('addBookModal');
+  document.getElementById('newBookTitle').value = '';
+  document.getElementById('newBookAuthor').value = '';
+  renderBooks(books);
+  updateKPIs();
+  showToast('📚 "' + title + '" added to library!');
+}
+
+function saveMember() {
+  const first = document.getElementById('newFirst').value.trim();
+  const last = document.getElementById('newLast').value.trim();
+  const role = document.getElementById('newRole').value;
+  const dept = document.getElementById('newDept').value;
+  const mid = document.getElementById('newMemberId').value.trim();
+  if (!first || !last) { showToast('⚠️ Please fill in the name!'); return; }
+  members.push({ id: Date.now(), name: first+' '+last, role, dept, booksOut:0, status:'active' });
+  closeModal('addMemberModal');
+  document.getElementById('newFirst').value = '';
+  document.getElementById('newLast').value = '';
+  document.getElementById('newEmail').value = '';
+  document.getElementById('newMemberId').value = '';
+  renderMembers(members);
+  updateKPIs();
+  showToast('👤 Member "' + first+' '+last + '" added!');
+}
+
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('show');
+});
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init
+renderBooks(books);
+renderMembers(members);
+renderIssued();
+updateKPIs();
+</script>
+</body>
+</html>
