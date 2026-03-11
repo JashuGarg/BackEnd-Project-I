@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScholarVault — Login</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="orb"
+      style="width:220px;height:220px;left:-80px;top:-80px;background:rgba(108,99,255,0.12);animation-delay:0s"></div>
+    <div class="orb"
+      style="width:160px;height:160px;left:65%;top:65%;background:rgba(167,139,250,0.1);animation-delay:1.5s"></div>
+    <div class="orb"
+      style="width:90px;height:90px;left:15%;top:75%;background:rgba(17,153,142,0.1);animation-delay:0.8s"></div>
+    <div class="orb" style="width:70px;height:70px;left:78%;top:8%;background:rgba(247,151,30,0.1);animation-delay:2s">
+    </div>
+
+    <div style="position:relative;z-index:1;text-align:center;width:100%">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        <span class="logo-text">ScholarVault</span>
+      </div>
+
+      <div class="hero-icon">🔐</div>
+
+      <div class="left-title">Welcome<br />Back!</div>
+      <div class="left-sub">Sign in to access your library account,<br />manage borrows, and explore thousands<br />of
+        books & journals.</div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-num">50K+</div>
+          <div class="stat-label">Books</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">12K</div>
+          <div class="stat-label">Members</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">98%</div>
+          <div class="stat-label">Satisfaction</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Access</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-wrap">
+
+      <div class="welcome-tag">
+        <span>📖 Student & Staff Portal</span>
+      </div>
+
+      <div class="form-title">Sign In</div>
+      <div class="form-sub">New to ScholarVault? <a href="../register/register.html">Create an account →</a></div>
+
+      <!-- Role selector -->
+      <div style="margin-bottom:20px">
+        <div
+          style="font-size:11px;font-weight:800;color:#bbb;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">
+          Sign in as</div>
+        <div class="role-grid">
+          <div class="role-btn active" onclick="selectRole(this,'Student')">
+            <div class="role-icon">🎓</div>
+            <div class="role-name">Student</div>
+          </div>
+          <div class="role-btn" onclick="selectRole(this,'Staff')">
+            <div class="role-icon">👔</div>
+            <div class="role-name">Staff</div>
+          </div>
+          <div class="role-btn" onclick="selectRole(this,'Librarian')">
+            <div class="role-icon">📚</div>
+            <div class="role-name">Librarian</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error alert -->
+      <div class="alert-error" id="alertError">
+        <span>⚠️</span>
+        <span id="alertMsg">Invalid email or password. Please try again.</span>
+      </div>
+
+      <!-- Email -->
+      <div class="field" id="f-email">
+        <div class="field-box">
+          <span class="field-icon">✉️</span>
+          <label id="lbl-email">University Email</label>
+          <input type="email" id="email" oninput="handleInput('email')" autocomplete="off" />
+        </div>
+        <div class="field-error" id="err-email">Enter a valid email address</div>
+      </div>
+
+      <!-- Password -->
+      <div class="field" id="f-password">
+        <div class="field-box">
+          <span class="field-icon">🔒</span>
+          <label id="lbl-password">Password</label>
+          <input type="password" id="password" oninput="handleInput('password')" autocomplete="off" />
+          <button class="toggle-pw" onclick="togglePw()" type="button" id="toggleBtn">👁️</button>
+        </div>
+        <div class="field-error" id="err-password">Password is required</div>
+      </div>
+
+      <!-- Remember & Forgot -->
+      <div class="row-mid">
+        <label class="remember">
+          <input type="checkbox" id="remember" />
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot">Forgot password?</a>
+      </div>
+
+      <!-- Login button -->
+      <button class="btn-login" onclick="doLogin()">
+        <span>🔓</span> Sign In to ScholarVault
+      </button>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span>OR</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- ID login -->
+      <div class="field" id="f-studentId">
+        <div class="field-box">
+          <span class="field-icon">🪪</span>
+          <label id="lbl-studentId">Sign in with Student / Staff ID</label>
+          <input type="text" id="studentId" oninput="handleInput('studentId')" autocomplete="off" />
+        </div>
+      </div>
+      <button class="btn-login" onclick="doIdLogin()"
+        style="background:linear-gradient(135deg,#11998e,#38ef7d);box-shadow:0 8px 24px rgba(17,153,142,0.3);margin-top:0">
+        <span>🪪</span> Sign In with ID
+      </button>
+
+      <div class="signup-row">Don't have an account? <a href="../register/register.html">Register here</a></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <span class="success-emoji">👋</span>
+      <div class="success-title">Welcome back, <span id="successRole"></span>!</div>
+      <div class="success-msg">You're now signed in to <strong>ScholarVault</strong>.<br />Redirecting to your
+        dashboard...
+      </div>
+      <button class="btn-dashboard" onclick="closeSuccess()">Go to Dashboard →</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -127,13 +127,13 @@
 
   <div class="nav-label">Links</div>
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">User Dashboard</span></a>
-  <a href="login.html" class="nav-item"><span class="nav-icon">🚪</span><span class="nav-text">Logout</span></a>
+  <a href="login/login.html" class="nav-item"><span class="nav-icon">🚪</span><span class="nav-text">Logout</span></a>
 
   <div class="sidebar-footer">
     <div class="admin-user">
-      <div class="admin-avatar">L</div>
+      <div class="admin-avatar"></div>
       <div>
-        <div style="font-size:12px;font-weight:800;color:white">Librarian</div>
+        <div style="font-size:12px;font-weight:800;color:white"></div>
         <div style="font-size:10px;color:rgba(255,255,255,0.4)">Admin Access</div>
       </div>
     </div>
@@ -269,6 +269,24 @@
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
+  // Check if user is librarian, otherwise redirect to dashboard
+  const userRole = localStorage.getItem('userRole');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  
+  if (userRole !== 'Librarian') {
+    window.location.href = 'dashboard.html';
+  }
+
+  // Update admin profile with actual user data
+  document.addEventListener('DOMContentLoaded', function() {
+    if (user.firstName) {
+      document.querySelector('.admin-avatar').textContent = user.firstName[0];
+      const nameElement = document.querySelector('.admin-user div div');
+      if (nameElement) {
+        nameElement.textContent = user.firstName + ' ' + user.lastName;
+      }
+    }
+  });
 let books = [
   { id:1, emoji:'🧮', title:'Intro to Algorithms', author:'Cormen et al.', genre:'CS', status:'issued' },
   { id:2, emoji:'📗', title:'Clean Code', author:'Robert C. Martin', genre:'CS', status:'issued' },

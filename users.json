@@ -1,0 +1,46 @@
+[
+  {
+    "id": "1773155586135",
+    "firstName": "DHRUV",
+    "lastName": "BANSAL",
+    "email": "dhruv1075.becse24@chitkara.edu.in",
+    "studentId": "467",
+    "role": "Staff",
+    "department": "Computer Science",
+    "year": null,
+    "password": "Dhruv123"
+  },
+  {
+    "id": "1773155680523",
+    "firstName": "DHRUV",
+    "lastName": "BANSAL",
+    "email": "dhruv075.becse24@chitkara.edu.in",
+    "studentId": "4123",
+    "role": "Student",
+    "department": "Mathematics",
+    "year": "2nd Year",
+    "password": "Dhruv123"
+  },
+  {
+    "id": "1773156850492",
+    "firstName": "asd",
+    "lastName": "avx",
+    "email": "dhruv.becse24@chitkara.edu.in",
+    "studentId": "978",
+    "role": "Librarian",
+    "department": "Computer Science",
+    "year": null,
+    "password": "Dhruv123"
+  },
+  {
+    "id": "1773159671772",
+    "firstName": "cgde",
+    "lastName": "uhyt",
+    "email": "dhruecse24@chitkara.edu.in",
+    "studentId": "123",
+    "role": "Staff",
+    "department": "Physics",
+    "year": "3rd Year",
+    "password": "Dhruv123"
+  }
+]

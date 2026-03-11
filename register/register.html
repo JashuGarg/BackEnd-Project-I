@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScholarVault — Register</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="orb"
+      style="width:220px;height:220px;left:-80px;top:-80px;background:rgba(108,99,255,0.12);animation-delay:0s"></div>
+    <div class="orb"
+      style="width:160px;height:160px;left:65%;top:65%;background:rgba(167,139,250,0.1);animation-delay:1.5s"></div>
+    <div class="orb"
+      style="width:90px;height:90px;left:15%;top:75%;background:rgba(17,153,142,0.1);animation-delay:0.8s"></div>
+    <div class="orb" style="width:70px;height:70px;left:78%;top:8%;background:rgba(247,151,30,0.1);animation-delay:2s">
+    </div>
+
+    <div style="position:relative;z-index:1;text-align:center;width:100%">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        <span class="logo-text">ScholarVault</span>
+      </div>
+
+      <div class="hero-icon" id="leftIcon">🎓</div>
+      <div class="left-title" id="leftTitle">Create Your<br />Account</div>
+      <div class="left-sub" id="leftSub">Join ScholarVault to access thousands of books, journals and research
+        materials.</div>
+
+      <div class="left-steps">
+        <div class="left-dot" id="ld0" style="width:28px;background:#6c63ff"></div>
+        <div class="left-dot" id="ld1" style="width:8px;background:rgba(255,255,255,0.2)"></div>
+        <div class="left-dot" id="ld2" style="width:8px;background:rgba(255,255,255,0.2)"></div>
+      </div>
+
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>50,000+ Books &amp; Journals</span>
+        </div>
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>Borrow up to 5 books at once</span>
+        </div>
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>Digital resources &amp; e-books</span>
+        </div>
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>Free for all enrolled students</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-wrap">
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:33%"></div>
+      </div>
+
+      <div class="welcome-tag"><span id="tagText">📋 Step 1 of 3</span></div>
+      <div class="form-title" id="formTitle">Personal Information</div>
+      <div class="form-sub">Already registered? <a href="../login/login.html">Sign in →</a></div>
+
+      <!-- STEP 1 — Personal -->
+      <div class="step-section active" id="step1">
+        <div class="grid2">
+          <div class="field" id="f-firstName">
+            <div class="field-box">
+              <span class="field-icon">👤</span>
+              <label id="lbl-firstName">First Name</label>
+              <input type="text" id="firstName" oninput="handleInput('firstName')" autocomplete="off" />
+            </div>
+            <div class="field-error" id="err-firstName">First name is required</div>
+          </div>
+          <div class="field no-icon" id="f-lastName">
+            <div class="field-box">
+              <label id="lbl-lastName">Last Name</label>
+              <input type="text" id="lastName" oninput="handleInput('lastName')" autocomplete="off" />
+            </div>
+            <div class="field-error" id="err-lastName">Last name is required</div>
+          </div>
+        </div>
+        <div class="field" id="f-email">
+          <div class="field-box">
+            <span class="field-icon">✉️</span>
+            <label id="lbl-email">University Email</label>
+            <input type="email" id="email" oninput="handleInput('email')" autocomplete="off" />
+          </div>
+          <div class="field-hint">Use your official university email</div>
+          <div class="field-error" id="err-email">Enter a valid email address</div>
+        </div>
+        <div class="field" id="f-studentId">
+          <div class="field-box">
+            <span class="field-icon">🪪</span>
+            <label id="lbl-studentId">Student / Staff ID</label>
+            <input type="text" id="studentId" oninput="handleInput('studentId')" autocomplete="off" />
+          </div>
+          <div class="field-error" id="err-studentId">ID number is required</div>
+        </div>
+      </div>
+
+      <!-- STEP 2 — Academic -->
+      <div class="step-section" id="step2">
+        <div class="field" id="f-role">
+          <div class="field-box">
+            <span class="field-icon">🎓</span>
+            <label id="lbl-role">Your Role</label>
+            <select id="role" onchange="handleSelect('role'); onRoleChange()">
+              <option value=""></option>
+              <option>Student</option>
+              <option>Staff</option>
+              <option>Librarian</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+          <div class="field-error" id="err-role">Please select a role</div>
+        </div>
+        <div class="field" id="f-department">
+          <div class="field-box">
+            <span class="field-icon">🏛️</span>
+            <label id="lbl-department">Department</label>
+            <select id="department" onchange="handleSelect('department')">
+              <option value=""></option>
+              <option>Computer Science</option>
+              <option>Mathematics</option>
+              <option>Physics</option>
+              <option>Chemistry</option>
+              <option>Biology</option>
+              <option>Economics</option>
+              <option>Philosophy</option>
+              <option>Medicine</option>
+              <option>Engineering</option>
+              <option>Literature</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+          <div class="field-error" id="err-department">Please select your department</div>
+        </div>
+        <div class="field" id="f-year" style="display:none">
+          <div class="field-box">
+            <span class="field-icon">📅</span>
+            <label id="lbl-year">Year of Study</label>
+            <select id="year" onchange="handleSelect('year')">
+              <option value=""></option>
+              <option>1st Year</option>
+              <option>2nd Year</option>
+              <option>3rd Year</option>
+              <option>4th Year</option>
+              <option>5th Year</option>
+              <option>Postgraduate</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+        <div class="info-box">
+          <span>💡</span>
+          <p>Students can borrow up to 5 books. Staff &amp; Librarians get up to 10. Librarians have unlimited access.</p>
+        </div>
+      </div>
+
+      <!-- STEP 3 — Security -->
+      <div class="step-section" id="step3">
+        <div class="field" id="f-password">
+          <div class="field-box">
+            <span class="field-icon">🔒</span>
+            <label id="lbl-password">Password</label>
+            <input type="password" id="password" oninput="handleInput('password'); onPasswordInput()"
+              autocomplete="off" />
+            <button type="button" onclick="togglePw()" id="toggleBtn"
+              style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:#bbb;padding:0;line-height:1;">👁️</button>
+          </div>
+          <div class="field-error" id="err-password">Password must be at least 8 characters</div>
+        </div>
+        <div class="strength-wrap" id="strengthWrap">
+          <div class="strength-bars">
+            <div class="strength-bar" id="sb1"></div>
+            <div class="strength-bar" id="sb2"></div>
+            <div class="strength-bar" id="sb3"></div>
+            <div class="strength-bar" id="sb4"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel"></div>
+        </div>
+        <div class="field" id="f-confirmPassword">
+          <div class="field-box">
+            <span class="field-icon">🔑</span>
+            <label id="lbl-confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" oninput="handleInput('confirmPassword')" autocomplete="off" />
+          </div>
+          <div class="field-error" id="err-confirmPassword">Passwords do not match</div>
+        </div>
+        <div class="check-wrap" id="check-agreed">
+          <input type="checkbox" id="agreed" />
+          <label for="agreed">I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></label>
+        </div>
+        <div class="field-error" id="err-agreed" style="margin:6px 0 0 0">Please accept the terms to continue</div>
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="btn-row">
+        <button class="btn-back" id="btnBack" style="display:none" onclick="goBack()">← Back</button>
+        <button class="btn-next" id="btnNext" onclick="goNext()">
+          <span>Continue</span><span>→</span>
+        </button>
+      </div>
+
+      <div class="signin-row">Already have an account? <a href="../login/login.html">Sign in here</a></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <span class="success-emoji">🎉</span>
+      <div class="success-title">Welcome to ScholarVault!</div>
+      <div class="success-msg">Hi <strong id="successName"></strong>, your account is ready.<br />Check <strong
+          id="successEmail"></strong> for your library card.</div>
+      <button class="btn-dashboard" onclick="closeSuccess()">Go to Login →</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>

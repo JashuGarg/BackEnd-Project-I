@@ -1,7 +1,14 @@
 import express from "express";
-import { signup, login } from "../controllers/user.controllers.js";
+import { signup, login, loginById } from "../controllers/user.controllers.js";
 
 const router = express.Router();
+
+// Default route - redirect to login page
+router
+    .route("/")
+    .get((req, res) => {
+      res.redirect('/login/login.html');
+    });
 
 router
     .route("/api")
@@ -10,6 +17,10 @@ router
 router
     .route("/api/login")
     .post(login);
+
+router
+    .route("/api/login-id")
+    .post(loginById);
 
 router
     .route("/api/signup")

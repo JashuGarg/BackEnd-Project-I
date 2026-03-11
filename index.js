@@ -1,5 +1,6 @@
 import express from "express";
 import userRouter from "./routes/user.routes.js";
+import path from "path";
 
 const port = 8000;
 const url = "";
@@ -9,6 +10,7 @@ const app = express();
 
 app.use(express.urlencoded({extended:false})); // parse form data 
 app.use(express.json()); // use to handle client json Data while http requests
+app.use(express.static(path.join(process.cwd()))); // serve static files
 
 // routes
 app.use("/", userRouter);
