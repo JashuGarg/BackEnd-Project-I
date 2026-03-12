@@ -1,5 +1,7 @@
 import express from "express";
+import path from "path";
 import userRouter from "./routes/user.routes.js";
+import { log } from "console";
 
 const port = 8000;
 const url = "";
@@ -8,20 +10,20 @@ const app = express();
 //middlewares
 
 app.use(express.urlencoded({extended:false})); // parse form data 
-app.use(express.json()); // use to handle client json Data while http requests
+app.use(express.json()); // use to handle client json Data while http request
+app.use(express.static(path.join(process.cwd(), "public")));
+//
 
 // routes
 app.use("/", userRouter);
 
-// DB connecting
-
-//server connecting
-app.listen(port,(err)=>{
+// server connecting
+app.listen(port,()=>{
     try {
-        console.log(`Server is live at Port: ${port}`);
+        console.log(`Server is running at port: ${port}`);
+        console.log("Link: http://localhost:8000/");
         
     } catch (error) {
-        console.log(`Error in connecting the server  ${error}`);
-        
+        console.log("Error while connecting to the server: ", error);
     }
 })

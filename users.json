@@ -1,0 +1,112 @@
+[
+  {
+    "id": "1773051320764",
+    "email": "Jashugarg101@gmail.com",
+    "password": "98148XXXXX"
+  },
+  {
+    "id": "1773051494823",
+    "email": "dishant@gmail.com",
+    "password": "991589XXX"
+  },
+  {
+    "id": "1773051501571",
+    "email": "kappa@gmail.com",
+    "password": "991589XXX"
+  },
+  {
+    "id": "1773051514768",
+    "email": "gupta004@gmail.com",
+    "password": "7894561230"
+  },
+  {
+    "id": "1773292513469",
+    "email": "jashugarg101@gmail.com",
+    "password": "12345678"
+  },
+  {
+    "id": "1773292598115",
+    "email": "dis@gmail.com",
+    "password": "123456789"
+  },
+  {
+    "id": "1773292738725",
+    "email": "jash@gmail.com",
+    "password": "123456"
+  },
+  {
+    "id": "1773292768138",
+    "email": "jashu12@gmail.com",
+    "password": "123456"
+  },
+  {
+    "id": "1773293268905",
+    "name": "Test User2",
+    "email": "test2@example.com",
+    "password": "password123",
+    "role": "student"
+  },
+  {
+    "id": "1773293611587",
+    "name": "jashu",
+    "email": "jashu123@gmail.com",
+    "password": "134567",
+    "role": "student"
+  },
+  {
+    "id": "1773293751183",
+    "name": "jashu",
+    "email": "jashu1223@gmail.com",
+    "password": "134567",
+    "role": "student"
+  },
+  {
+    "id": "1773293950450",
+    "name": "jashu garg",
+    "email": "jashugarg@gmail.com",
+    "password": "123456789",
+    "role": "librarian"
+  },
+  {
+    "id": "1773294191256",
+    "name": "Test User3",
+    "email": "test3@example.com",
+    "password": "password123",
+    "role": "student"
+  },
+  {
+    "id": "1773294521310",
+    "name": "asdfh",
+    "email": "jashugarg1001@gmail.com",
+    "password": "123456789",
+    "role": "librarian"
+  },
+  {
+    "id": "1773294541131",
+    "name": "dsf",
+    "email": "jashugarg100001@gmail.com",
+    "password": "123456789",
+    "role": "student"
+  },
+  {
+    "id": "1773294924802",
+    "name": "Test User4",
+    "email": "test4@example.com",
+    "password": "password123",
+    "role": "student"
+  },
+  {
+    "id": "1773295012819",
+    "name": "kwe",
+    "email": "jashu451@gmail.con",
+    "password": "789456123",
+    "role": "librarian"
+  },
+  {
+    "id": "1773295401623",
+    "name": "A User",
+    "email": "auser@example.com",
+    "password": "password",
+    "role": "student"
+  }
+]

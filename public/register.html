@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScholarVault — Register</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./css/register.css" />
+</head>
+
+<body>
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="orb"
+      style="width:220px;height:220px;left:-80px;top:-80px;background:rgba(108,99,255,0.12);animation-delay:0s"></div>
+    <div class="orb"
+      style="width:160px;height:160px;left:65%;top:65%;background:rgba(167,139,250,0.1);animation-delay:1.5s"></div>
+    <div class="orb"
+      style="width:90px;height:90px;left:15%;top:75%;background:rgba(17,153,142,0.1);animation-delay:0.8s"></div>
+    <div class="orb" style="width:70px;height:70px;left:78%;top:8%;background:rgba(247,151,30,0.1);animation-delay:2s">
+    </div>
+
+    <div style="position:relative;z-index:1;text-align:center;width:100%">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        <span class="logo-text">ScholarVault</span>
+      </div>
+
+      <div class="hero-icon" id="leftIcon">🎓</div>
+      <div class="left-title" id="leftTitle">Create Your<br />Account</div>
+      <div class="left-sub" id="leftSub">Join ScholarVault to access thousands of books, journals and research
+        materials.</div>
+
+      <div class="left-steps">
+        <div class="left-dot" id="ld0" style="width:28px;background:#6c63ff"></div>
+        <div class="left-dot" id="ld1" style="width:8px;background:rgba(255,255,255,0.2)"></div>
+        <div class="left-dot" id="ld2" style="width:8px;background:rgba(255,255,255,0.2)"></div>
+      </div>
+
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>50,000+ Books &amp; Journals</span>
+        </div>
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>Borrow up to 5 books at once</span>
+        </div>
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>Digital resources &amp; e-books</span>
+        </div>
+        <div class="benefit">
+          <div class="benefit-check">✓</div><span>Free for all enrolled students</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-wrap">
+
+      <div class="welcome-tag"><span>📝 Register to ScholarVault</span></div>
+      <div class="form-title">Create Your Account</div>
+      <div class="form-sub">Already registered? <a href="login.html">Sign in →</a></div>
+
+      <form id="registerForm" action="/signup" method="POST" novalidate>
+        <div class="field" id="f-name">
+          <div class="field-box">
+            <span class="field-icon">👤</span>
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required autocomplete="off" />
+          </div>
+          <div class="field-error">Name is required</div>
+        </div>
+
+        <div class="field" id="f-email">
+          <div class="field-box">
+            <span class="field-icon">✉️</span>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="off" />
+          </div>
+          <div class="field-error">Valid email is required</div>
+        </div>
+
+        <div class="field" id="f-password">
+          <div class="field-box">
+            <span class="field-icon">🔒</span>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="off" />
+          </div>
+          <div class="field-error">Password is required</div>
+        </div>
+
+        <div class="field" id="f-role">
+          <div class="field-box">
+            <span class="field-icon">🏷️</span>
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+              <option value="">Select your role</option>
+              <option value="librarian">Librarian</option>
+              <option value="student">Student</option>
+            </select>
+          </div>
+          <div class="field-error">Role is required</div>
+        </div>
+
+        <button type="submit" class="btn-next" style="width:100%;">Register</button>
+      </form>
+
+      <div class="signin-row">Already have an account? <a href="login.html">Sign in here</a></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <span class="success-emoji">🎉</span>
+      <div class="success-title">Welcome to ScholarVault!</div>
+      <div class="success-msg">Hi <strong id="successName"></strong>, your account is ready.<br />Check <strong
+          id="successEmail"></strong> for your library card.</div>
+      <button class="btn-dashboard" onclick="closeSuccess()">Go to Login →</button>
+    </div>
+  </div>
+  <script src="./scripts/register.js"></script>
+</body>
+
+</html>

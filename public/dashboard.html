@@ -145,12 +145,12 @@
   <a href="login.html" class="nav-item"><span class="nav-icon">🚪</span><span class="nav-text">Logout</span></a>
   <div class="sidebar-footer">
     <div class="user-card">
-      <div class="user-avatar">A</div>
+      <div class="user-avatar" id="userAvatar">A</div>
       <div>
-        <div class="user-name">Arjun Sharma</div>
-        <div class="user-role">Student · CS</div>
+        <div class="user-name" id="userName">Arjun Sharma</div>
+        <div class="user-role" id="userRole">Student · CS</div>
       </div>
-      <span class="user-logout" onclick="window.location.href='login.html'">🚪</span>
+      <span class="user-logout" id="userLogout" style="cursor:pointer">🚪</span>
     </div>
   </div>
 </aside>
@@ -379,8 +379,47 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-renderBooks(books);
-renderBorrows();
+function ensureAuth() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user || !user.email) {
+    window.location.href = '/login';
+    return false;
+  }
+
+  const nameEl = document.getElementById('userName');
+  const roleEl = document.getElementById('userRole');
+  const avatarEl = document.getElementById('userAvatar');
+
+  if (nameEl) nameEl.textContent = user.name || user.email;
+  if (roleEl) roleEl.textContent = (user.role || 'Student') + ' · Library';
+  if (avatarEl) avatarEl.textContent = (user.name || user.email).charAt(0).toUpperCase();
+
+  const logout = document.getElementById('userLogout');
+  if (logout) {
+    logout.addEventListener('click', () => {
+      localStorage.removeItem('user');
+      localStorage.removeItem('signupUser');
+      window.location.href = '/login';
+    });
+  }
+
+  const navLogout = document.querySelector('a[href="login.html"]');
+  if (navLogout) {
+    navLogout.addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      localStorage.removeItem('signupUser');
+      window.location.href = '/login';
+    });
+  }
+
+  return true;
+}
+
+if (ensureAuth()) {
+  renderBooks(books);
+  renderBorrows();
+}
 </script>
 </body>
 </html>

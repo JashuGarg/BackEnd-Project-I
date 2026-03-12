@@ -3,6 +3,7 @@ import path from 'path';
 
 const usersFilePath = path.join(process.cwd(), 'users.json');
 
+// Helper functions to read user
 const readUsers = () => {
     if (!fs.existsSync(usersFilePath)) {
         return [];
@@ -10,29 +11,37 @@ const readUsers = () => {
     const data = fs.readFileSync(usersFilePath, 'utf8');
     return JSON.parse(data);
 };
-
+// Helper functions to write userss
 const writeUsers = (users) => {
     fs.writeFileSync(usersFilePath,JSON.stringify(users, null, 2));
 };
 
-export const signup = (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ message: 'All Fields are required' });
+const signup = (req, res) => {
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password || !role) {
+        return res.status(400).json({ message: 'Name, email, password and role are required' });
     }
+
     const users = readUsers();
     const found = users.find(user => user.email === email);
     if (found) {
         return res.status(409).json({ message: 'User already exists' });
     }
 
-    const newUser = { id: Date.now().toString(), email, password };
+    const newUser = {
+        id: Date.now().toString(),
+        name,
+        email,
+        password,
+        role
+    };
+
     users.push(newUser);
     writeUsers(users);
     res.status(201).json({ message: 'User created successfully' });
 };
 
-export const login = (req, res) => {
+const login = (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -46,7 +55,18 @@ export const login = (req, res) => {
         return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    res.status(200).json({ message: 'Login successful', user: { id: user.id, email: user.email } });
+    res.status(200).json({
+        message: 'Login successful',
+        user: {
+            id: user.id,
+            name: user.name || '',
+            email: user.email,
+            role: user.role || 'Student'
+        }
+    });
 };
 
 
+
+
+export { signup, login };
