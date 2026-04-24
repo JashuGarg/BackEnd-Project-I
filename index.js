@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import userRouter from "./routes/user.routes.js";
-import { log } from "console";
+
 
 const port = 8000;
 const url = "";

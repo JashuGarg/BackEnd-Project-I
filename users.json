@@ -10,11 +10,6 @@
     "password": "991589XXX"
   },
   {
-    "id": "1773051501571",
-    "email": "kappa@gmail.com",
-    "password": "991589XXX"
-  },
-  {
     "id": "1773051514768",
     "email": "gupta004@gmail.com",
     "password": "7894561230"
@@ -108,5 +103,12 @@
     "email": "auser@example.com",
     "password": "password",
     "role": "student"
+  },
+  {
+    "id": "1773320178946",
+    "name": "jashugarg",
+    "email": "jashugarg1011@gmai.com",
+    "password": "123456789",
+    "role": "librarian"
   }
 ]
