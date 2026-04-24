@@ -1,5 +1,5 @@
 import express from "express";
-import { signup, login } from "../controllers/user.controllers.js";
+import { signup, login, loginById } from "../controllers/user.controllers.js";
 
 const router = express.Router();
 
@@ -26,6 +26,7 @@ router
   .post(signup);
 
 router
+<<<<<<< HEAD
   .route("/")
   .get((req, res) => {
     res.redirect("/dashboard.html");
@@ -52,6 +53,14 @@ router
   });
 
 
+=======
+    .route("/api/login-id")
+    .post(loginById);
+
+router
+    .route("/api/signup")
+    .post(signup);
+>>>>>>> 77db7af67faba576d962c57bf12d4db573c79b29
 
 export default router;
 
