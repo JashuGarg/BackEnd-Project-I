@@ -1,0 +1,11 @@
+[
+  {
+    "id": "borrow1777387608322",
+    "userId": "1777377214996",
+    "bookId": "book001",
+    "borrowDate": "2026-04-28T14:46:48.322Z",
+    "dueDate": "2026-05-12T14:46:48.322Z",
+    "returnDate": null,
+    "status": "active"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "book001",
+    "title": "Database Systems",
+    "author": "C.J. Date",
+    "isbn": "978-0136086246",
+    "status": "available",
+    "cover": "📚",
+    "quantity": 4,
+    "description": "The comprehensive guide to database management systems"
+  },
+  {
+    "id": "book002",
+    "title": "The Pragmatic Programmer",
+    "author": "David Thomas",
+    "isbn": "978-0201616224",
+    "status": "available",
+    "cover": "💻",
+    "quantity": 3,
+    "description": "Your journey to mastery in software development"
+  },
+  {
+    "id": "book003",
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "isbn": "978-0132350884",
+    "status": "available",
+    "cover": "✨",
+    "quantity": 4,
+    "description": "A handbook of agile software craftsmanship"
+  },
+  {
+    "id": "book004",
+    "title": "Design Patterns",
+    "author": "Gang of Four",
+    "isbn": "978-0201633610",
+    "status": "available",
+    "cover": "🎨",
+    "quantity": 2,
+    "description": "Elements of reusable object-oriented software"
+  },
+  {
+    "id": "book005",
+    "title": "Web Development with Node.js",
+    "author": "Ethan Brown",
+    "isbn": "978-1491949290",
+    "status": "available",
+    "cover": "🌐",
+    "quantity": 6,
+    "description": "Learn to build scalable web applications"
+  }
+]
